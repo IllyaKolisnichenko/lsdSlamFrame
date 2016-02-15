@@ -16,6 +16,10 @@ TEMPLATE    = lib
 
 DEFINES += LSDSLAMFRAME_LIBRARY
 
+#QMAKE_CFLAGS_DEBUG    += -pg
+#QMAKE_CXXFLAGS_DEBUG  += -pg
+#QMAKE_LFLAGS_DEBUG    += -pg
+
 SOURCES += \
             DataStructures/Frame.cpp                \
             DataStructures/FrameMemory.cpp          \
@@ -52,22 +56,24 @@ unix {
     LIBS    += -lopencv_features2d  -lopencv_calib3d
 
     # Sophus
-    INCLUDEPATH += /home/sergey/MyProject/MySlamProject/Qt/
-    INCLUDEPATH += /home/sergey/libs/Sophus
+#    INCLUDEPATH += /home/sergey/MyProject/MySlamProject/Qt/
+#    INCLUDEPATH += /home/sergey/libs/Sophus
 
-    INCLUDEPATH +=  /home/sergey/MyProject/MySlamProject/Qt/lsdSlamIO/
-    LIBS        +=  -L/home/sergey/MyProject/MySlamProject/Qt/FullProject/build/lsdSlamIO   \
+    BASE_LIBS_PATH = $$PWD/../build
+
+    INCLUDEPATH +=  ../lsdSlamIO/
+    LIBS        +=  -L$$BASE_LIBS_PATH/lsdSlamIO   \
                     -llsdSlamIO
 
-    INCLUDEPATH +=  /home/sergey/MyProject/MySlamProject/Qt/lsdSlamUtil/
-    LIBS        +=  -L/home/sergey/MyProject/MySlamProject/Qt/FullProject/build/lsdSlamUtil \
-                    -llsdSlamUtil
+    INCLUDEPATH +=  ../lsdSlamUtil/
+    LIBS        +=  -L$$BASE_LIBS_PATH/lsdSlamUtil \
+#                    -llsdSlamUtil
 
-    INCLUDEPATH += /home/sergey/MyProject/MySlamProject/Qt/lsdSlamTracking/
+    INCLUDEPATH +=  ../lsdSlamTracking/
 #    LIBS        +=  -L/home/sergey/MyProject/MySlamProject/Qt/FullProject/build/lsdSlamTracking  \
 #                    -llsdSlamTracking
 
-    INCLUDEPATH +=  /home/sergey/MyProject/MySlamProject/Qt/lsdSlamGlobalMapping/
+    INCLUDEPATH +=  ../lsdSlamGlobalMapping/
 #    LIBS        +=  -L/home/sergey/MyProject/MySlamProject/Qt/FullProject/build/lsdSlamGlobalMapping \
 #                    -llsdSlamGlobalMapping
 
@@ -75,25 +81,25 @@ unix {
     #LIBS        +=  -L/home/sergey/MyProject/MySlamProject/Qt/FullProject/build/lsdSlamDepth  \
     #                -llsdSlamDepth
 
-    LIBS += -L/usr/local/cuda/lib64     -lcudart  -lcuda  \
+#    LIBS += -L/usr/local/cuda/lib64     -lcudart  -lcuda  \
 #            -L/usr/local/qwt-6.1.2/lib  -lqwt
 
-    CUDA_ARCH       = sm_32
-    CUDA_SOURCES    = DataStructures/gpu_processor.cu
+#    CUDA_ARCH       = sm_32
+#    CUDA_SOURCES    = DataStructures/gpu_processor.cu
 
-    cu.output       = ${QMAKE_FILE_BASE}.o
-    cu.commands     = /usr/local/cuda/bin/nvcc -c --compiler-options '-fPIC' -arch=$$CUDA_ARCH ${QMAKE_FILE_NAME} -o ${QMAKE_FILE_OUT}
+#    cu.output       = ${QMAKE_FILE_BASE}.o
+#    cu.commands     = /usr/local/cuda/bin/nvcc -c --compiler-options '-fPIC' -arch=$$CUDA_ARCH ${QMAKE_FILE_NAME} -o ${QMAKE_FILE_OUT}
 
-    cu.dependency_type = TYPE_C
+#    cu.dependency_type = TYPE_C
 
-    cu.input        = CUDA_SOURCES
-    cu.CONFIG      += no_link
-    cu.variable_out = OBJECTS
+#    cu.input        = CUDA_SOURCES
+#    cu.CONFIG      += no_link
+#    cu.variable_out = OBJECTS
 
-    QMAKE_EXTRA_COMPILERS += cu
+#    QMAKE_EXTRA_COMPILERS += cu
 
     #target.path = /usr/lib
-    target.path = /home/sergey/MyProject/MySlamProject/lsdSlamSharedLibs
+    target.path = $$BASE_LIBS_PATH/lsdSlamApp
     INSTALLS += target
 }
 
