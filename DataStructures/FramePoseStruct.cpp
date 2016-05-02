@@ -26,20 +26,22 @@ namespace lsd_slam
 
 int FramePoseStruct::cacheValidCounter = 0;
 
-
 int privateFramePoseStructAllocCount = 0;
 
 FramePoseStruct::FramePoseStruct(Frame* frame)
 {
-	cacheValidFor = -1;
-	isOptimized = false;
-	thisToParent_raw = camToWorld = camToWorld_new = Sim3();
-	this->frame = frame;
-	frameID = frame->id();
-	trackingParent = 0;
-	isRegisteredToGraph = false;
-	hasUnmergedPose = false;
-	isInGraph = false;
+    this->frame = frame;
+    frameID     = frame->id();
+
+    cacheValidFor   = -1;
+    isOptimized     = false;
+
+    thisToParent_raw = camToWorld = camToWorld_new = Sim3();
+
+    trackingParent      = 0;
+    isRegisteredToGraph = false;
+    hasUnmergedPose     = false;
+    isInGraph           = false;
 
 //	this->graphVertex = nullptr;
 
@@ -60,7 +62,6 @@ void FramePoseStruct::setPoseGraphOptResult(Sim3 camToWorld)
 	if(!isInGraph)
 		return;
 
-
 	camToWorld_new = camToWorld;
 	hasUnmergedPose = true;
 }
@@ -70,10 +71,10 @@ void FramePoseStruct::applyPoseGraphOptResult()
 	if(!hasUnmergedPose)
 		return;
 
-
-	camToWorld = camToWorld_new;
-	isOptimized = true;
+    camToWorld      = camToWorld_new;
+    isOptimized     = true;
 	hasUnmergedPose = false;
+
 	cacheValidCounter++;
 }
 void FramePoseStruct::invalidateCache()

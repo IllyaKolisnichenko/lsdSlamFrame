@@ -24,12 +24,12 @@
 
 #include <boost/thread/recursive_mutex.hpp>
 #include <boost/thread/shared_mutex.hpp>
+
 #include <boost/math/special_functions/fpclassify.hpp>
 
 #include "DataStructures/FrameMemory.h"
 #include "DataStructures/FramePoseStruct.h"
 
-#include "SophusUtil.h"
 #include "settings.h"
 
 namespace lsd_slam
@@ -37,6 +37,8 @@ namespace lsd_slam
 
 class DepthMapPixelHypothesis;
 class TrackingReference;
+
+//class FramePoseStruct;
 /**
  */
 

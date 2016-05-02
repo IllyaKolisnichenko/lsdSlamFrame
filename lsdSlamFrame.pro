@@ -28,11 +28,12 @@ SOURCES += \
             DepthEstimation/DepthMapPixelHypothesis.cpp
 
 HEADERS += \
-            DataStructures/Frame.h                  \
-            DataStructures/FrameMemory.h            \
-            DataStructures/FramePoseStruct.h        \
-            DepthEstimation/DepthMap.h              \
-            DepthEstimation/DepthMapPixelHypothesis.h
+            DataStructures/Frame.h                      \
+            DataStructures/FrameMemory.h                \
+            DataStructures/FramePoseStruct.h            \
+            DepthEstimation/DepthMap.h                  \
+            DepthEstimation/DepthMapPixelHypothesis.h   \
+            DepthEstimation/IndexThreadReduce.h
 
 unix {
     # Boost

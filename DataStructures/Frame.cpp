@@ -18,12 +18,12 @@
 * along with LSD-SLAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <cmath>
+#include "DataStructures/Frame.h"
 
+#include <cmath>
 #include <limits>
 
-#include "DataStructures/Frame.h"
-#include "DataStructures/FrameMemory.h"
+#include <boost/math/special_functions/fpclassify.hpp>
 
 #include "DepthEstimation/DepthMapPixelHypothesis.h"
 

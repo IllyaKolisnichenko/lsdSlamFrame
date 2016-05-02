@@ -26,11 +26,10 @@
 #include <memory>
 #include <limits>
 
-#include <boost/thread.hpp>
-
 #include "opencv2/opencv.hpp"
 
-#include "SophusUtil.h"
+#include "sophus/se3.hpp"
+
 #include "IndexThreadReduce.h"
 
 namespace lsd_slam

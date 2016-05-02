@@ -20,7 +20,6 @@
 
 #pragma once
 
-#include "SophusUtil.h"
 #include "GlobalMapping/g2oTypeSim3Sophus.h"
 
 namespace lsd_slam

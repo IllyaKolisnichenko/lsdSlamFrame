@@ -20,9 +20,7 @@
 
 #include "DepthEstimation/DepthMapPixelHypothesis.h"
 
-//#include "GlobalMapping/KeyFrameGraph.h"
-
-#include "DataStructures/Frame.h"
+#include "settings.h"
 
 namespace lsd_slam
 {

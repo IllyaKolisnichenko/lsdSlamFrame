@@ -19,16 +19,12 @@
 */
 
 #include "DepthEstimation/DepthMap.h"
-
 #include "DepthEstimation/DepthMapPixelHypothesis.h"
+
 #include "DataStructures/Frame.h"
 
-//#include "GlobalMapping/KeyFrameGraph.h"
-
-//#include "util/settings.h"
 #include "globalFuncs.h"
 #include "ImageDisplay.h"
-//#include "util/EigenCoreInclude.h"
 
 namespace lsd_slam
 {

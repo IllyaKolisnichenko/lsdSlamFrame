@@ -24,7 +24,6 @@
 namespace lsd_slam
 {
 
-
 FrameMemory::FrameMemory()
 {
 }
