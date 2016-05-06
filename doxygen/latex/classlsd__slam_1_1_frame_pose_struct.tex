@@ -1,0 +1,85 @@
+\hypertarget{classlsd__slam_1_1_frame_pose_struct}{\section{lsd\-\_\-slam\-:\-:Frame\-Pose\-Struct Class Reference}
+\label{classlsd__slam_1_1_frame_pose_struct}\index{lsd\-\_\-slam\-::\-Frame\-Pose\-Struct@{lsd\-\_\-slam\-::\-Frame\-Pose\-Struct}}
+}
+
+
+{\ttfamily \#include $<$Frame\-Pose\-Struct.\-h$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+E\-I\-G\-E\-N\-\_\-\-M\-A\-K\-E\-\_\-\-A\-L\-I\-G\-N\-E\-D\-\_\-\-O\-P\-E\-R\-A\-T\-O\-R\-\_\-\-N\-E\-W \hyperlink{classlsd__slam_1_1_frame_pose_struct_a73f4ca2938793d96b18822c8d5b995bd}{Frame\-Pose\-Struct} (\hyperlink{classlsd__slam_1_1_frame}{Frame} $\ast$frame)
+\begin{DoxyCompactList}\small\item\em \hyperlink{classlsd__slam_1_1_frame_pose_struct}{Frame\-Pose\-Struct}. \end{DoxyCompactList}\item 
+\hypertarget{classlsd__slam_1_1_frame_pose_struct_a3d5c5bd4bf131a4ccbda54b9554d18f9}{void {\bfseries set\-Pose\-Graph\-Opt\-Result} (Sim3 cam\-To\-World)}\label{classlsd__slam_1_1_frame_pose_struct_a3d5c5bd4bf131a4ccbda54b9554d18f9}
+
+\item 
+\hypertarget{classlsd__slam_1_1_frame_pose_struct_a6a5df905cf934f3a20f4ff2a21060aab}{void {\bfseries apply\-Pose\-Graph\-Opt\-Result} ()}\label{classlsd__slam_1_1_frame_pose_struct_a6a5df905cf934f3a20f4ff2a21060aab}
+
+\item 
+\hypertarget{classlsd__slam_1_1_frame_pose_struct_ae2e711db13b9732374fd5e04f960f914}{Sim3 {\bfseries get\-Cam\-To\-World} (int recursion\-Depth=0)}\label{classlsd__slam_1_1_frame_pose_struct_ae2e711db13b9732374fd5e04f960f914}
+
+\item 
+\hypertarget{classlsd__slam_1_1_frame_pose_struct_ab9486b6fbedeb81e5e7d29f02f92c008}{void {\bfseries invalidate\-Cache} ()}\label{classlsd__slam_1_1_frame_pose_struct_ab9486b6fbedeb81e5e7d29f02f92c008}
+
+\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classlsd__slam_1_1_frame_pose_struct_a8400a2c52d604df957e0e9bac5617694}{\hyperlink{classlsd__slam_1_1_frame_pose_struct}{Frame\-Pose\-Struct} $\ast$ \hyperlink{classlsd__slam_1_1_frame_pose_struct_a8400a2c52d604df957e0e9bac5617694}{tracking\-Parent}}\label{classlsd__slam_1_1_frame_pose_struct_a8400a2c52d604df957e0e9bac5617694}
+
+\begin{DoxyCompactList}\small\item\em Parent, the frame originally tracked on. never changes. \end{DoxyCompactList}\item 
+Sim3 \hyperlink{classlsd__slam_1_1_frame_pose_struct_acf840ddb08df60aa537c52b305430a2a}{this\-To\-Parent\-\_\-raw}
+\item 
+\hypertarget{classlsd__slam_1_1_frame_pose_struct_a539963b1638c4b6a4f6d193001a9b94a}{int {\bfseries frame\-I\-D}}\label{classlsd__slam_1_1_frame_pose_struct_a539963b1638c4b6a4f6d193001a9b94a}
+
+\item 
+\hypertarget{classlsd__slam_1_1_frame_pose_struct_a63504ec171fc92efa6b265e044c09542}{\hyperlink{classlsd__slam_1_1_frame}{Frame} $\ast$ {\bfseries frame}}\label{classlsd__slam_1_1_frame_pose_struct_a63504ec171fc92efa6b265e044c09542}
+
+\item 
+\hypertarget{classlsd__slam_1_1_frame_pose_struct_a7d41681d66aefd365ba9266742f2249f}{bool \hyperlink{classlsd__slam_1_1_frame_pose_struct_a7d41681d66aefd365ba9266742f2249f}{is\-Registered\-To\-Graph}}\label{classlsd__slam_1_1_frame_pose_struct_a7d41681d66aefd365ba9266742f2249f}
+
+\begin{DoxyCompactList}\small\item\em Whether this pose\-Struct is registered in the Graph. if true M\-E\-M\-O\-R\-Y W\-I\-L\-L B\-E H\-A\-N\-D\-L\-E\-D B\-Y G\-R\-A\-P\-H. \end{DoxyCompactList}\item 
+\hypertarget{classlsd__slam_1_1_frame_pose_struct_af6fc2b6183b0e68b698a4d75f97b8a9d}{bool \hyperlink{classlsd__slam_1_1_frame_pose_struct_af6fc2b6183b0e68b698a4d75f97b8a9d}{is\-Optimized}}\label{classlsd__slam_1_1_frame_pose_struct_af6fc2b6183b0e68b698a4d75f97b8a9d}
+
+\begin{DoxyCompactList}\small\item\em Whether pose is optimized (true only for K\-F, after first apply\-Pose\-Graph\-Opt\-Result()) \end{DoxyCompactList}\item 
+\hypertarget{classlsd__slam_1_1_frame_pose_struct_aea53c1fd0bb7038a8338f70d131172ad}{bool \hyperlink{classlsd__slam_1_1_frame_pose_struct_aea53c1fd0bb7038a8338f70d131172ad}{is\-In\-Graph}}\label{classlsd__slam_1_1_frame_pose_struct_aea53c1fd0bb7038a8338f70d131172ad}
+
+\begin{DoxyCompactList}\small\item\em True as soon as the vertex is added to the g2o graph. \end{DoxyCompactList}\item 
+\hypertarget{classlsd__slam_1_1_frame_pose_struct_a0a0ed0521f632f87c7cadc6f7583e985}{Vertex\-Sim3 $\ast$ \hyperlink{classlsd__slam_1_1_frame_pose_struct_a0a0ed0521f632f87c7cadc6f7583e985}{graph\-Vertex}}\label{classlsd__slam_1_1_frame_pose_struct_a0a0ed0521f632f87c7cadc6f7583e985}
+
+\begin{DoxyCompactList}\small\item\em graph\-Vertex (if the frame has one, i.\-e. is a K\-F and has been added to the graph, otherwise 0). \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+A class. \hyperlink{classlsd__slam_1_1_frame_pose_struct}{Frame\-Pose\-Struct} 
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classlsd__slam_1_1_frame_pose_struct_a73f4ca2938793d96b18822c8d5b995bd}{\index{lsd\-\_\-slam\-::\-Frame\-Pose\-Struct@{lsd\-\_\-slam\-::\-Frame\-Pose\-Struct}!Frame\-Pose\-Struct@{Frame\-Pose\-Struct}}
+\index{Frame\-Pose\-Struct@{Frame\-Pose\-Struct}!lsd_slam::FramePoseStruct@{lsd\-\_\-slam\-::\-Frame\-Pose\-Struct}}
+\subsubsection[{Frame\-Pose\-Struct}]{\setlength{\rightskip}{0pt plus 5cm}E\-I\-G\-E\-N\-\_\-\-M\-A\-K\-E\-\_\-\-A\-L\-I\-G\-N\-E\-D\-\_\-\-O\-P\-E\-R\-A\-T\-O\-R\-\_\-\-N\-E\-W lsd\-\_\-slam\-::\-Frame\-Pose\-Struct\-::\-Frame\-Pose\-Struct (
+\begin{DoxyParamCaption}
+\item[{{\bf Frame} $\ast$}]{frame}
+\end{DoxyParamCaption}
+)}}\label{classlsd__slam_1_1_frame_pose_struct_a73f4ca2938793d96b18822c8d5b995bd}
+
+
+\hyperlink{classlsd__slam_1_1_frame_pose_struct}{Frame\-Pose\-Struct}. 
+
+Constructor
+
+
+\begin{DoxyParams}{Parameters}
+{\em frame} & \\
+\hline
+\end{DoxyParams}
+
+
+\subsection{Member Data Documentation}
+\hypertarget{classlsd__slam_1_1_frame_pose_struct_acf840ddb08df60aa537c52b305430a2a}{\index{lsd\-\_\-slam\-::\-Frame\-Pose\-Struct@{lsd\-\_\-slam\-::\-Frame\-Pose\-Struct}!this\-To\-Parent\-\_\-raw@{this\-To\-Parent\-\_\-raw}}
+\index{this\-To\-Parent\-\_\-raw@{this\-To\-Parent\-\_\-raw}!lsd_slam::FramePoseStruct@{lsd\-\_\-slam\-::\-Frame\-Pose\-Struct}}
+\subsubsection[{this\-To\-Parent\-\_\-raw}]{\setlength{\rightskip}{0pt plus 5cm}Sim3 lsd\-\_\-slam\-::\-Frame\-Pose\-Struct\-::this\-To\-Parent\-\_\-raw}}\label{classlsd__slam_1_1_frame_pose_struct_acf840ddb08df60aa537c52b305430a2a}
+Set initially as tracking result (then it's a S\-E(3)), and is changed only once, when the frame becomes a K\-F (-\/$>$rescale). 
+
+The documentation for this class was generated from the following file\-:\begin{DoxyCompactItemize}
+\item 
+Data\-Structures/Frame\-Pose\-Struct.\-h\end{DoxyCompactItemize}

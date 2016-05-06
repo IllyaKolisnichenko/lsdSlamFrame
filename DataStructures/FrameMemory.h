@@ -41,19 +41,41 @@ class FrameMemory
 public:
 	EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
-	/** Returns the global instance. Creates it when the method is first called. */
-	static FrameMemory& getInstance();
+    /**
+     * @brief getInstance
+     *
+     * Creates it when the method is first called.
+     * @return Returns the global instance.
+     */
+    static FrameMemory& getInstance();
 
-	/** Allocates or fetches a buffer with length: size * sizeof(float).
-	  * Corresponds to "buffer = new float[size]". */
-	float* getFloatBuffer(unsigned int size);
+    /**
+     * @brief getFloatBuffer
+     *
+     *  Allocates or fetches a buffer with length: size * sizeof(float).
+     *  Corresponds to "buffer = new float[size]".
+     * @param size
+     * @return
+     */
+    float* getFloatBuffer(unsigned int size);
 
-	/** Allocates or fetches a buffer with length: size * sizeof(float).
-	  * Corresponds to "buffer = new float[size]". */
+    /**
+     * @brief getBuffer
+     *
+     * Allocates or fetches a buffer with length: size * sizeof(float).
+     * Corresponds to "buffer = new float[size]".
+     * @param sizeInByte
+     * @return
+     */
 	void* getBuffer(unsigned int sizeInByte);
 	
-	/** Returns an allocated buffer back to the global storage for re-use.
-	  * Corresponds to "delete[] buffer". */
+    /**
+     * @brief returnBuffer
+     *
+     *  Returns an allocated buffer back to the global storage for re-use.
+     *  Corresponds to "delete[] buffer".
+     * @param buffer
+     */
 	void returnBuffer(void* buffer);
 	
 
@@ -71,9 +93,9 @@ private:
     std::unordered_map< void*, unsigned int >                   bufferSizes;
     std::unordered_map< unsigned int, std::vector< void* > >    availableBuffers;
 
-    // Список активных фреймов
+    // List of active frames
     std::list<Frame*>   activeFrames;
-    // Мютекс для его защиты
+    // Mutex for protection
     boost::mutex        activeFramesMutex;
 };
 

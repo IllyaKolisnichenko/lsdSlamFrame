@@ -26,33 +26,42 @@
 namespace lsd_slam
 {
 class Frame;
+
+/** A class. FramePoseStruct */
 class FramePoseStruct {
 public:
 	EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
+    /**
+     * @brief FramePoseStruct
+     *
+     * Constructor
+     *
+     * @param frame
+     */
 	FramePoseStruct(Frame* frame);
 	virtual ~FramePoseStruct();
 
-	// parent, the frame originally tracked on. never changes.
+    /// Parent, the frame originally tracked on. never changes.
 	FramePoseStruct* trackingParent;
 
-	// set initially as tracking result (then it's a SE(3)),
-	// and is changed only once, when the frame becomes a KF (->rescale).
+    /// Set initially as tracking result (then it's a SE(3)),
+    /// and is changed only once, when the frame becomes a KF (->rescale).
 	Sim3 thisToParent_raw;
 
     int     frameID;
     Frame*  frame;
 
-	// whether this poseStruct is registered in the Graph. if true MEMORY WILL BE HANDLED BY GRAPH
+    /// Whether this poseStruct is registered in the Graph. if true MEMORY WILL BE HANDLED BY GRAPH
 	bool isRegisteredToGraph;
 
-	// whether pose is optimized (true only for KF, after first applyPoseGraphOptResult())
+    /// Whether pose is optimized (true only for KF, after first applyPoseGraphOptResult())
 	bool isOptimized;
 
-	// true as soon as the vertex is added to the g2o graph.
+    /// True as soon as the vertex is added to the g2o graph.
 	bool isInGraph;
 
-	// graphVertex (if the frame has one, i.e. is a KF and has been added to the graph, otherwise 0).
+    /// graphVertex (if the frame has one, i.e. is a KF and has been added to the graph, otherwise 0).
     VertexSim3* graphVertex;
 
     void setPoseGraphOptResult  (Sim3 camToWorld);
@@ -67,14 +76,14 @@ private:
     int         cacheValidFor;
     static int  cacheValidCounter;
 
-	// absolute position (camToWorld).
-	// can change when optimization offset is merged.
+    /// Absolute position (camToWorld).
+    /// can change when optimization offset is merged.
 	Sim3 camToWorld;
 
-	// new, optimized absolute position. is added on mergeOptimization.
+    /// New, optimized absolute position. is added on mergeOptimization.
 	Sim3 camToWorld_new;
 
-	// whether camToWorld_new is newer than camToWorld
+    /// Whether camToWorld_new is newer than camToWorld
 	bool hasUnmergedPose;
 };
 

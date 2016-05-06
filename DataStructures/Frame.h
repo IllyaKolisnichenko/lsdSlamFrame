@@ -37,16 +37,27 @@ namespace lsd_slam
 
 class DepthMapPixelHypothesis;
 class TrackingReference;
-/**
- */
 
+/** A class. Frame */
 class Frame
 {
 public:
 	EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+
 	friend class FrameMemory;
 
-    //************** Конструктор/Диструктор ************************************
+    /**
+     * @brief Frame
+     *
+     * Constructor
+     *
+     * @param id
+     * @param width
+     * @param height
+     * @param K
+     * @param timestamp
+     * @param image
+     */
     Frame(  int                     id          ,
             int                     width       ,
             int                     height      ,
@@ -54,6 +65,18 @@ public:
             double                  timestamp   ,
             const unsigned char*    image           );
 
+    /**
+     * @brief Frame
+     *
+     * Constructor
+     *
+     * @param id
+     * @param width
+     * @param height
+     * @param K
+     * @param timestamp
+     * @param image
+     */
     Frame(  int                     id          ,
             int                     width       ,
             int                     height      ,
@@ -61,30 +84,65 @@ public:
             double                  timestamp   ,
             const float*            image           );
 
+    /**
+     * Destructor
+     */
 	~Frame();
 	
-	
-    /** Sets or updates idepth and idepthVar on level zero.
-     * Invalidates higher levels. */
+    /**
+     * @brief setDepth
+     *
+     * Sets or updates idepth and idepthVar on level zero.
+     * Invalidates higher levels.
+     *
+     * @param newDepth
+     */
     void setDepth(const DepthMapPixelHypothesis* newDepth);
 
-	/** Calculates mean information for statistical purposes. */
+    /**
+     * @brief calculateMeanInformation
+     *
+     * Calculates mean information for statistical purposes.
+     */
 	void calculateMeanInformation();
 	
-    /** Sets ground truth depth (real, not inverse!)
-     * from a float array on level zero. Invalidates higher levels. */
+    /**
+     * @brief setDepthFromGroundTruth
+     *
+     * Sets ground truth depth (real, not inverse!)
+     * from a float array on level zero. Invalidates higher levels.
+     *
+     * @param depth
+     * @param cov_scale
+     */
 	void setDepthFromGroundTruth(const float* depth, float cov_scale = 1.0f);
 	
-    /** Prepares this frame for stereo comparisons with the other frame (computes some intermediate values that will be needed) */
+    /**
+     * @brief prepareForStereoWith
+     *
+     * Prepares this frame for stereo comparisons with the other frame (computes some intermediate values that will be needed)
+     *
+     * @param other
+     * @param thisToOther
+     * @param K
+     * @param level
+     */
     void prepareForStereoWith(Frame* other, Sim3 thisToOther, const Eigen::Matrix3f& K, const int level);
 
 	
     void setPermaRef            ( TrackingReference*        reference   );
     void takeReActivationData   ( DepthMapPixelHypothesis*  depthMap    );
 
-	// shared_lock this as long as any minimizable arrays are being used.
-	// the minimizer will only minimize frames after getting
-	// an exclusive lock on this.
+    //
+    /**
+     * @brief getActiveLock
+     *
+     * shared_lock this as long as any minimizable arrays are being used.
+     * the minimizer will only minimize frames after getting
+     * an exclusive lock on this.
+     *
+     * @return
+     */
 	inline boost::shared_lock<boost::shared_mutex> getActiveLock()
 	{
         return FrameMemory::getInstance().activateFrame( this );
@@ -99,10 +157,15 @@ public:
 	 * Here are ALL central pose and scale informations.
 	 * generally, everything is stored relative to the frame
 	 */
+    /** @name Here are ALL central pose and scale informations.
+     * Generally, everything is stored relative to the frame.
+     */
+    ///@{
     FramePoseStruct* pose;
     Sim3    getScaledCamToWorld (int num=0) { return pose->getCamToWorld();             }
     bool    hasTrackingParent   ()          { return pose->trackingParent != nullptr;   }
     Frame*  getTrackingParent   ()          { return pose->trackingParent->frame;       }
+    ///@}
 
 private:
     Sim3 lastConstraintTrackedCamToWorld;
@@ -112,25 +175,34 @@ public:
 	std::unordered_set< Frame*, std::hash<Frame*>, std::equal_to<Frame*>,
 		Eigen::aligned_allocator< Frame* > > neighbors;
 
-	/** Multi-Map indicating for which other keyframes with which initialization tracking failed.*/
+//	/** Multi-Map indicating for which other keyframes with which initialization tracking failed.*/
 //	std::unordered_multimap< Frame*, Sim3, std::hash<Frame*>, std::equal_to<Frame*>,
 //		Eigen::aligned_allocator< std::pair<const Frame*,Sim3> > > trackingFailed;
 
-	// flag set when depth is updated.
+    /// Flag is set when depth is updated.
 	bool depthHasBeenUpdatedFlag;
 
-	// Tracking Reference for quick test. Always available, never taken out of memory.
+    // Tracking Reference for quick test. Always available, never taken out of memory.
 	// this is used for re-localization and re-Keyframe positioning.
+    /** @name Tracking Reference for quick test.
+     * Always available, never taken out of memory.
+     * this is used for re-localization and re-Keyframe positioning.
+     */
+    ///@{
     boost::mutex        permaRef_mutex;
     Eigen::Vector3f*    permaRef_posData;           // (x,y,z)
     Eigen::Vector2f*    permaRef_colorAndVarData;	// (I, Var)
+    ///@}
 
     int     permaRefNumPts;
 
-	// Temporary values
+    /** @name Temporary values
+     */
+    ///@{
     int     referenceID;
     int     referenceLevel;
     float   distSquared;
+    ///@}
 
 	Eigen::Matrix3f K_otherToThis_R;
 	Eigen::Vector3f K_otherToThis_t;
@@ -142,7 +214,9 @@ public:
 	Eigen::Vector3f otherToThis_R_row2;
 	Eigen::Vector3f thisToOther_t;
 
-	// statistics
+    /** @name Statistics
+     */
+    ///@{
     float   initialTrackedResidual;
     int     numFramesTrackedOnThis;
     int     numMappedOnThis;
@@ -153,11 +227,13 @@ public:
     float   edgeErrorSum, edgesNum;
     int     numMappablePixels;
     float   meanInformation;
+    ///@}
 
 private:
-	// used internally. locked while something is being built, such that no
-    // two threads build anything simultaneously.
-    // not locked on require() if nothing is changed.
+
+    /// Used internally. locked while something is being built, such that no
+    /// two threads build anything simultaneously.
+    /// not locked on require() if nothing is changed.
     boost::mutex        buildMutex;
 
 	boost::shared_mutex activeMutex;
@@ -168,7 +244,13 @@ private:
 	  * ONLY CALL THIS, if an exclusive lock on activeMutex is owned! */
 	bool minimizeInMemory();
 
-    // Выводит информационное сообщение
+    /**
+     * @brief printfAssert
+     *
+     * Outputs the information message.
+     *
+     * @param message
+     */
     void printfAssert(const char* message) const;
 
 public:
@@ -207,7 +289,7 @@ public:
     /** Returns the frame's recording timestamp. */
     inline double   timestamp() const;
 
-    // Возвращает изображение
+    /** Returns an image */
     inline float*   image(int level = 0);
 
     inline const Eigen::Vector4f* gradients(int level = 0);
@@ -220,34 +302,38 @@ public:
     inline const float*         idepth_reAct    ();
     inline const float*         idepthVar_reAct ();
 
-    /** Flags for use with require() and requirePyramid().
-     * See the Frame class documentation for their exact meaning. */
-    // Флаги для спецификации запрашеваеммых данных
+    /**
+     * @enum DataFlags
+     * @brief Flags for use with require() and requirePyramid().
+     *
+     * See the Frame class documentation for their exact meaning.
+     * (Flags for specification of requested data).
+     */
     enum DataFlags
     {
-        IMAGE			= 1<<0,
-        GRADIENTS		= 1<<1,
-        MAX_GRADIENTS	= 1<<2,
-        IDEPTH			= 1<<3,
-        IDEPTH_VAR		= 1<<4,
-        REF_ID			= 1<<5,
+        IMAGE			= 1<<0,     ///< 1<<0
+        GRADIENTS		= 1<<1,     ///< 1<<1
+        MAX_GRADIENTS	= 1<<2,     ///< 1<<2
+        IDEPTH			= 1<<3,     ///< 1<<3
+        IDEPTH_VAR		= 1<<4,     ///< 1<<4
+        REF_ID			= 1<<5,     ///< 1<<5
 
-        ALL = IMAGE | GRADIENTS | MAX_GRADIENTS | IDEPTH | IDEPTH_VAR | REF_ID
+        ALL = IMAGE | GRADIENTS | MAX_GRADIENTS | IDEPTH | IDEPTH_VAR | REF_ID ///< IMAGE | GRADIENTS | MAX_GRADIENTS | IDEPTH | IDEPTH_VAR | REF_ID
     };
 
 private:
-    // Запрос данных
+    // Request of data
     void require( int dataFlags, int  level = 0                           );
-    // Освобождение данных
+    // The release of data
     void release( int dataFlags, bool pyramidsOnly, bool invalidateOnly   );
 
-    // Инициализация фрейма
+    // Initialization of the frame
     void initialize(    int id                          ,
                         int width                       ,
                         int                     height  ,
                         const Eigen::Matrix3f&  K       ,
                         double                  timestamp   );
-    // Ничего не делает ( пустая функция )
+    // Doing nothing ( empty function )
     void setDepth_Allocate();
 
     void buildImage     (int level);
@@ -265,18 +351,18 @@ private:
 
     struct Data
     {
-        // Уникальный идентификатор кадра
+        // Unique ID of a frame
         int id;
 
-        // Хранит размеры данных на каждом уровне
+        // Stores sizes of data on each level
         int width   [PYRAMID_LEVELS];
         int height  [PYRAMID_LEVELS];
 
-        // Матрици дял каждого уровня
+        // Matrix for each level
         Eigen::Matrix3f K       [PYRAMID_LEVELS];
         Eigen::Matrix3f KInv    [PYRAMID_LEVELS];
 
-        // Что это за параметры ????
+        // What are these parameters ???
         float fx[PYRAMID_LEVELS];
         float fy[PYRAMID_LEVELS];
         float cx[PYRAMID_LEVELS];
@@ -287,24 +373,26 @@ private:
         float cxInv[PYRAMID_LEVELS];
         float cyInv[PYRAMID_LEVELS];
 
-        // Метка времени
+        // Time stamp
         double timestamp;
 
-        // Буфер изображения
+        // Image buffer
         float*  image       [PYRAMID_LEVELS];
-        // Флаг актуальности изображения
+
+        // Image relevance flag
         bool    imageValid  [PYRAMID_LEVELS];
 
-        // Буфер градиента
+        // Gradient buffer
         Eigen::Vector4f*    gradients       [PYRAMID_LEVELS];
-        // Флаг актуальности градиента
+
+        // Gradient relevance flag
         bool                gradientsValid  [PYRAMID_LEVELS];
 
-        // Чем отличается этот градиент от обычного ???
+        // How differs this gradient from usual ???
         float*  maxGradients        [PYRAMID_LEVELS];
         bool    maxGradientsValid   [PYRAMID_LEVELS];
 
-        // Флаг установки какихто данных...
+        // Flag of setting of some data ...
         bool    hasIDepthBeenSet;
 
         // negative depthvalues are actually allowed,
@@ -317,14 +405,14 @@ private:
         float*  idepthVar       [PYRAMID_LEVELS];
         bool    idepthVarValid  [PYRAMID_LEVELS];
 
-        // data needed for re-activating the frame. theoretically,
+        // Data needed for re-activating the frame. theoretically,
         // this is all data the frame contains.
         unsigned char*  validity_reAct;
         float*          idepth_reAct;
         float*          idepthVar_reAct;
         bool            reActivationDataValid;
 
-        // data from initial tracking, indicating which pixels in the reference frame ware good or not.
+        // Data from initial tracking, indicating which pixels in the reference frame ware good or not.
         // deleted as soon as frame is used for mapping.
         bool* refPixelWasGood;
     };

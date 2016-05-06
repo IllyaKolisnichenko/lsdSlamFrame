@@ -29,21 +29,18 @@ namespace lsd_slam
 
 //class KeyFrameGraph;
 
-/** Depth hypothesis used in DepthMap.
+/** A class. DepthMapPixelHypothesis. Describes hypothesis for each pixel.
+ *  Depth hypothesis used in DepthMap.
  *  
  *  Inverse depths need to be scaled with the DepthMap's internalScaleFactor to
  *  get frame scale. (From that, scale with the current keyframe's scale to
  *  get the current best estimate of absolute scale). */
-
-// Класс описывают гипотизу для каждого пикселя
 class DepthMapPixelHypothesis
 {
 public:
 
 	/** Flag telling if there is a valid estimate at this point.
 	 * All other values are only valid if this is set to true. */
-    // Флаг признака действительного значения
-    // Все остальные значения действительны при условии установки того флага
 	bool isValid;
 
     /** Flag that blacklists a point to never be used
@@ -65,10 +62,24 @@ public:
 	float idepth_smoothed;
 	float idepth_var_smoothed;
 
-    // Конструктор по умолчантю
+    /**
+     * @brief DepthMapPixelHypothesis
+     *
+     * Constructor by default.
+     */
     inline DepthMapPixelHypothesis() : isValid(false), blacklisted(0) {}
 
-    // Конструктор с инициализацией
+    /**
+     * @brief DepthMapPixelHypothesis
+     *
+     * Constructor with initialization.
+     *
+     * @param my_idepth
+     * @param my_idepth_smoothed
+     * @param my_idepth_var
+     * @param my_idepth_var_smoothed
+     * @param my_validity_counter
+     */
     inline DepthMapPixelHypothesis( const float &my_idepth,
                                     const float &my_idepth_smoothed,
                                     const float &my_idepth_var,
@@ -83,7 +94,15 @@ public:
                             idepth_smoothed         ( my_idepth_smoothed        ),
                             idepth_var_smoothed     ( my_idepth_var_smoothed    ) {}
 
-    // Конструктор с не полной инициализацией
+    /**
+     * @brief DepthMapPixelHypothesis
+     *
+     * Constructor with partial initialization.
+     *
+     * @param my_idepth
+     * @param my_idepth_var
+     * @param my_validity_counter
+     */
     inline DepthMapPixelHypothesis( const float &my_idepth,
                                     const float &my_idepth_var,
                                     const int   &my_validity_counter) :
@@ -96,8 +115,13 @@ public:
             idepth_smoothed         (-1),
             idepth_var_smoothed     (-1) {}
 
-    // Возвращает цвет для визуализации пикселя
-	cv::Vec3b getVisualizationColor(int lastFrameID) const;
+    /**
+     * @brief getVisualizationColor
+     *
+     * @param lastFrameID
+     * @return Returns a color for pixel visualization.
+     */
+    cv::Vec3b getVisualizationColor(int lastFrameID) const;
 };
 
 }
