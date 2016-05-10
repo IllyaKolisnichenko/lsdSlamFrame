@@ -41,31 +41,31 @@ Frame::Frame(   int                     id          ,
                 double                  timestamp   ,
                 const unsigned char*    image           )
 {
-    // Начальная инициализация
+    // Initial initialization
     initialize( id, width, height, K, timestamp );
-    // Запрашиваем буффер для кадра
+    // Retrieve the buffer for a frame
     data.image[0]   = FrameMemory::getInstance().getFloatBuffer( data.width[0] * data.height[0] );
 
-    // Похоже на адрес последнего элемента
+    // Seems to be an adress of the last element
     float* maxPt    = data.image[0] + data.width[0] * data.height[0];
-    // Для каждого элемента буффера
+    // For each element in buffer
 	for(float* pt = data.image[0]; pt < maxPt; pt++)
 	{
-        // Копируем изображение в буффер
+        // Copy the image to the buffer
 		*pt = *image;
-        // Увеличить адрес изображения
+        // Increment the adress of the image
 		image++;
 	}
-    // Отметить, что изображение действиетльно
+    // Note that image is real
 	data.imageValid[0] = true;
 
-    // Увеличить счетчик зарезервированных изображений
+    // Increment the counter of reserved images
 	privateFrameAllocCount++;
 
 /// *********** INFO FOR DEBUG !!!!!!!!!!!!!!!!!!!!!
-    // Если требуется вывод отладочной информации
+    // If we need an output of debugging information
     if( enablePrintDebugInfo && printMemoryDebugInfo )
-        // Вывести информацию
+        // Output the information
         printf( "ALLOCATED frame %d, now there are %d\n",
                 this->id(),
                 privateFrameAllocCount              );
@@ -78,27 +78,27 @@ Frame::Frame(   int                     id          ,
                 double                  timestamp   ,
                 const float*            image           )
 {
-    // Провести инициализацию
+    // Make an initialization
     initialize( id, width, height, K, timestamp );
 	
-    // Запросить буфер памяти
+    // Retrieve the buffer of memory
     data.image[0] = FrameMemory::getInstance().getFloatBuffer( data.width[0] * data.height[0]   );
 
-    // Копируем буферы
+    // Copy buffers
     memcpy( data.image[0]   ,
             image   ,
             data.width[0]*data.height[0] * sizeof(float)    );
 
-    // Отмеяаем, что изображение действительно
+    // Note that image is real
 	data.imageValid[0] = true;
 
-    // Увеличить счетчик зарезервированных изображений
+    // Increment the counter of reserved images
 	privateFrameAllocCount++;
 
 /// *********** INFO FOR DEBUG !!!!!!!!!!!!!!!!!!!!!
-    // Если требуется вывод отладочной информации
+    // If we need an output of debugging information
     if( enablePrintDebugInfo && printMemoryDebugInfo )
-        // Вывести информацию
+        // Output the information
         printf( "ALLOCATED frame %d, now there are %d\n",
                 this->id(),
                 privateFrameAllocCount              );
@@ -108,12 +108,12 @@ Frame::~Frame()
 {
 
 /// *********** INFO FOR DEBUG !!!!!!!!!!!!!!!!!!!!!
-    // Если требуется вывод отладочной информации
+    // If we need an output of debugging information
 	if(enablePrintDebugInfo && printMemoryDebugInfo)
-        // Вывести информацию
+        // Output the information
 		printf("DELETING frame %d\n", this->id());
 
-    // Осовбодить пать кадра
+    // Free memory of the frame
     FrameMemory::getInstance().deactivateFrame( this );
 
 //    if( !pose->isRegisteredToGraph )
@@ -336,7 +336,7 @@ void Frame::setDepthFromGroundTruth(const float* depth, float cov_scale)
     data.idepthValid[0]     = true;
     data.idepthVarValid[0]  = true;
 
-    // Это не я закоментировал
+    // !!! WAS COMMENTED IN ORIGINAL PROJECT !!!
     // data.refIDValid[0] = true;
 
 	// Invalidate higher levels, they need to be updated with the new data
@@ -352,6 +352,7 @@ void Frame::prepareForStereoWith( Frame*    other,
 {
     Sim3 otherToThis = thisToOther.inverse();
 
+    // !!! WAS COMMENTED IN ORIGINAL PROJECT !!!
     // Это не я закоментировал
     //otherToThis   = data.worldToCam * other->data.camToWorld;
 
@@ -464,7 +465,7 @@ void Frame::initialize( int                     id          ,
 {
 	data.id = id;
 	
-    // Создать экземпляр класса
+    // Create a class instance
     pose = new FramePoseStruct(this);
 
     data.K[0]  = K;
@@ -490,14 +491,14 @@ void Frame::initialize( int                     id          ,
 	
     numMappablePixels   = -1;
 
-    // Для каждого уровня
+    // For each level
     for ( int level = 0; level < PYRAMID_LEVELS; ++level )
 	{
         // x/2
         data.width  [level] = width     >> level;
         data.height [level] = height    >> level;
 
-        // Сбрасываем флаги
+        // Set flags to FALSE
         data.imageValid         [level] = false;
         data.gradientsValid     [level] = false;
         data.maxGradientsValid  [level] = false;
@@ -512,13 +513,14 @@ void Frame::initialize( int                     id          ,
 
         data.reActivationDataValid  = false;
 
+        // !!! WAS COMMENTED IN ORIGINAL PROJECT !!!
         // Это не я закоментировал
         //data.refIDValid[level] = false;
 
         // Для всех не нулевых уровней
         if ( level > 0 )
 		{
-            // Пересчитать  параметры линзы ( по какой логике???)
+            // Recount the parameters of the lens ( what logic ???)
 			data.fx[level] = data.fx[level-1] * 0.5;
 			data.fy[level] = data.fy[level-1] * 0.5;
 
@@ -592,12 +594,14 @@ void Frame::buildImage(int level)
 
 	const float* source = data.image[level - 1];
 
+    // Allocate memory
 	if (data.image[level] == 0)
 		data.image[level] = FrameMemory::getInstance().getFloatBuffer(data.width[level] * data.height[level]);
 
     float* dest = data.image[level];
 
 #if defined(ENABLE_SSE)
+    // !!! WAS COMMENTED IN ORIGINAL PROJECT !!!
 	// I assume all all subsampled width's are a multiple of 8.
 	// if this is not the case, this still works except for the last * pixel, which will produce a segfault.
 	// in that case, reduce this loop and calculate the last 0-3 dest pixels by hand....
@@ -636,6 +640,7 @@ void Frame::buildImage(int level)
 		return;
 	}
 #elif defined(ENABLE_NEON)
+    // !!! WAS COMMENTED IN ORIGINAL PROJECT !!!
 	// I assume all all subsampled width's are a multiple of 8.
 	// if this is not the case, this still works except for the last * pixel, which will produce a segfault.
 	// in that case, reduce this loop and calculate the last 0-3 dest pixels by hand....
@@ -695,6 +700,7 @@ void Frame::buildImage(int level)
 	}
 #endif
 
+    // Depends on current level
 	int wh = width*height;
 	const float* s;
 	for(int y=0;y<wh;y+=width*2)
@@ -741,25 +747,25 @@ void Frame::buildGradients(int level)
     int width   = data.width [level];
     int height  = data.height[level];
 
-    // recieving memory buffer if necessary
+    // Receiving memory buffer if necessary
 	if(data.gradients[level] == 0)
 		data.gradients[level] = (Eigen::Vector4f*)FrameMemory::getInstance().getBuffer(sizeof(Eigen::Vector4f) * width * height);
 
-    // start image pointer (without first line)
+    // Start image pointer (without first line)
     const float*        img_pt      = data.image[level] + width;
-    // end image pointer without last line
+    // End image pointer without last line
     const float*        img_pt_max  = data.image[level] + width * (height-1);
-    // start vector buffer (without first line)
+    // Start vector buffer (without first line)
     Eigen::Vector4f*    gradxyii_pt = data.gradients[level] + width;
 	
-    // point before worked
+    // Point before worked
     float val_m1 = *(img_pt-1);
-    // worked point
+    // Worked point
     float val_00 = * img_pt;
-    // point after worked
+    // Point after worked
     float val_p1 = *(img_pt+1);
 
-    // for all points
+    // For all points
 	for(; img_pt < img_pt_max; img_pt++, gradxyii_pt++)
 	{
 		val_p1 = *(img_pt+1);
@@ -798,7 +804,7 @@ void Frame::buildMaxGradients(int level)
 	if (data.maxGradients[level] == 0)
 		data.maxGradients[level] = FrameMemory::getInstance().getFloatBuffer(width * height);
 	
-    // allocate temporary buffer
+    // Allocate temporary buffer
 	float* maxGradTemp = FrameMemory::getInstance().getFloatBuffer(width * height);
 
 	// 1. write abs gradients in real data.
@@ -818,7 +824,7 @@ void Frame::buildMaxGradients(int level)
 		*maxgrad_pt = sqrtf(dx*dx + dy*dy);
 	}
 
-	// 2. smear up/down direction into temp buffer
+    // 2. smear up/down direction into temporary buffer
     // second point of second line
     maxgrad_pt      = data.maxGradients[level] + width + 1;
     // witout last line and last point
@@ -878,7 +884,7 @@ void Frame::buildMaxGradients(int level)
 	if(level==0)
 		this->numMappablePixels = numMappablePixels;
 
-    // free temprary buffer
+    // Free temprary buffer
     FrameMemory::getInstance().returnBuffer( maxGradTemp );
 
 	data.maxGradientsValid[level] = true;
@@ -903,9 +909,9 @@ void Frame::buildIDepthAndIDepthVar( int level )
 		return;
 	}
 
-    // Будет вызываться рекурсивно до 0 ????
+    // Will be called recursively until it doesn't match 0?
     require( IDEPTH, level - 1 );
-    // Блокирует мютекс
+    // Lock the mutex
     boost::unique_lock<boost::mutex> lock2(buildMutex);
 	
     if( data.idepthValid[level] && data.idepthVarValid[level] )
@@ -931,19 +937,19 @@ void Frame::buildIDepthAndIDepthVar( int level )
     float* idepthDest       = data.idepth   [level];
     float* idepthVarDest    = data.idepthVar[level];
 	
-    // for all pixels on picture
+    // For all pixels in the image
     for( int y = 0; y < height; y++ )
 	{
         for( int x = 0; x < width; x++ )
 		{
-            int idx     = 2 *   ( x + y * sw    );      // sw 2 time biger
+            int idx     = 2 *   ( x + y * sw    );      // sw 2 time bigger
             int idxDest =       ( x + y * width );
 
             float idepthSumsSum = 0;
             float ivarSumsSum   = 0;
             int   num           = 0;
 
-			// build sums
+            // Build sums
 			float ivar;
 			float var = idepthVarSource[idx];
             if( var > 0 )

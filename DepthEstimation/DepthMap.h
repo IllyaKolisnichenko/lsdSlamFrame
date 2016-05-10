@@ -49,51 +49,93 @@ public:
 	EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
     //******************** Конструктор / Диструктор ****************************
+    /**
+     * @brief DepthMap
+     *
+     * Constructor
+     *
+     * @param w
+     * @param h
+     * @param K
+     */
     DepthMap(   int w, int h, const Eigen::Matrix3f& K  );
 
-    // Блокирует реализацию оператора копирования
+    /**
+     * @brief DepthMap
+     *
+     * Lock the implementation of the "copy" operator.
+     */
     DepthMap(const DepthMap&)               = delete;
     DepthMap& operator=(const DepthMap&)    = delete;
 
+    /**
+     * Destructor
+     */
 	~DepthMap();
 
-	/** Resets everything. */    
-    // Помечает все гипотезы как не действительные
-	void reset();
-	
-    //************************** Keyframe **************************************
     /**
-     * does propagation and whole-filling-regularization (no observation, for that need to call updateKeyframe()!)
-     **/
+     * @brief reset
+     *
+     * Resets everything. Marks all hyphothesises as invalid.
+     */
+    void reset();
+	
+    /**
+     * @brief createKeyFrame
+     *
+     * Does propagation and whole-filling-regularization (no observation, for that need to call updateKeyframe()!)
+     *
+     * @param new_keyframe
+     */
     void createKeyFrame( Frame* new_keyframe);
 
-	/**
-	 * does obervation and regularization only.
-	 **/
+    /**
+     * @brief updateKeyframe
+     *
+     * Does obervation and regularization only.
+     *
+     * @param referenceFrames
+     */
     void updateKeyframe( std::deque< std::shared_ptr<Frame> > referenceFrames );
 	
-	/**
-	 * does one fill holes iteration
-	 */
+    /**
+     * @brief finalizeKeyFrame
+     *
+     * Does one fill holes iteration.
+     */
 	void finalizeKeyFrame();
 
 	void invalidate();
 
-    // Возвращает true если  указатель на кадр не нулевой
+    /**
+     * @brief isValid
+     * @return Returns TRUE if pointer to the frame is NOT null.
+     */
     inline bool isValid() {return m_poActiveKeyFrame != 0;};
 
 	int debugPlotDepthMap();
 
 	// ONLY for debugging, their memory is managed (created & deleted) by this object.
 
+    /** @name Debugging
+     * ONLY for debugging, their memory is managed (created & deleted) by this object.
+     */
+    ///@{
     cv::Mat debugImageHypothesisHandling;
 	cv::Mat debugImageHypothesisPropagation;
 	cv::Mat debugImageStereoLines;
 	cv::Mat debugImageDepth;
+    ///@}
 
     void initializeFromGTDepth  (Frame* new_frame);
 
-    // Инициализация карты глубин
+    /**
+     * @brief initializeRandomly
+     *
+     * Initialization of depth map.
+     *
+     * @param new_frame
+     */
     void initializeRandomly     (Frame* new_frame);
 
 	void setFromExistingKF(Frame* kf);
@@ -132,7 +174,7 @@ public:
     float nAvgFillHoles;
     float nAvgSetDepth;
 
-	// pointer to global keyframe graph
+    /// Pointer to global keyframe graph
 	IndexThreadReduce threadReducer;
 
 private:
@@ -153,26 +195,28 @@ private:
 	// ============= parameter copies for convenience ===========================
 	// these are just copies of the pointers given to this function, for convenience.
 	// these are NOT managed by this object!
-    // Указатель на текущий кейфрейм
+    // Pointer to the current Key Frame
     Frame* m_poActiveKeyFrame;
 
-    // Указатель на мутекс для текущего кейфрейма
+    // Pointer to the mutex of current Key Frame
 	boost::shared_lock<boost::shared_mutex> activeKeyFramelock;
     const float*                            activeKeyFrameImageData;
     bool                                    activeKeyFrameIsReactivated;
 
-    // Указатель на предыдущий опорный кадр
+    // Pointer to the previous support frame
 	Frame* oldest_referenceFrame;
-    // Указатель на новый опорный кадр
+
+    // Pointer to the new support frame
 	Frame* newest_referenceFrame;
 
-    // Указатели на опорные кадры
+    // Pointers to support frames
 	std::vector<Frame*> referenceFrameByID;
-    // Какоето смещение
+
+    // Some offset
 	int referenceFrameByID_offset;
 
-	// ============= internally used buffers for intermediate calculations etc. =============
-	// for internal depth tracking, their memory is managed (created & deleted) by this object.
+    // ============= Internally used buffers for intermediate calculations etc. =============
+    // For internal depth tracking, their memory is managed (created & deleted) by this object.
     DepthMapPixelHypothesis*    m_poOtherDepthMap;
     DepthMapPixelHypothesis*    m_poCurrentDepthMap;
 
@@ -180,7 +224,7 @@ private:
 
 	
 	// ============ internal functions ==================================================
-	// does the line-stereo seeking.
+    // Does the line-stereo seeking.
 	// takes a lot of parameters, because they all have been pre-computed before.
     inline float doLineStereo   (   const float     u,                      const float v,
                                     const float     epxn,                   const float epyn,
