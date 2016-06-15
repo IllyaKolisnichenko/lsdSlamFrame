@@ -27,7 +27,7 @@
 
 #include "DepthEstimation/DepthMapPixelHypothesis.h"
 
-#include "Tracking/TrackingReference.h"
+#include "TrackingReference.h"
 
 namespace lsd_slam
 {
